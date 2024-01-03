@@ -28,6 +28,9 @@ let
     systemdMinimal
     nix
     util-linux
+    strace
+    libudev-zero
+    usbutils
   ] ++ nixosConfig.config.disko.extraDependencies;
   preVM = ''
     ${lib.concatMapStringsSep "\n" (disk: "truncate -s ${disk.imageSize} ${disk.name}.raw") (lib.attrValues nixosConfig.config.disko.devices.disk)}
@@ -164,8 +167,9 @@ in
 
     build_memory=''${build_memory:-1024}
     QEMU_OPTS=${lib.escapeShellArg QEMU_OPTS}
-    QEMU_OPTS+=" -m $build_memory"
+    QEMU_OPTS+=" -m $build_memory -usb -device u2f-passthru"
     export QEMU_OPTS
+    echo $QEMU_OPTS
 
     ${pkgs.bash}/bin/sh -e ${vmTools.vmRunCommand vmTools.qemuCommandLinux}
     cd /
