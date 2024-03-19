@@ -167,7 +167,7 @@ in
 
     build_memory=''${build_memory:-1024}
     QEMU_OPTS=${lib.escapeShellArg QEMU_OPTS}
-    QEMU_OPTS+=" -m $build_memory -usb -device u2f-passthru"
+    QEMU_OPTS+=" -m $build_memory serial=/dev/tty -usb -device usb-host,vendorid=0x1050,productid=0x0407"
     export QEMU_OPTS
     echo $QEMU_OPTS
 
